@@ -16,17 +16,16 @@ import numpy as np
 import pandas as pd
 from numpy import ndarray
 from pandas import DataFrame
-from pydantic import BaseConfig, Field
+from pydantic import BaseConfig, Field, ConfigDict
 
-# We are using Pydantic dataclasses instead of vanilla Python's
-# See #1598 for the reasons behind this choice & performance considerations
-from pydantic.dataclasses import dataclass
+#HL: disabled due to conflict with pydantic >=2.0
+#from pydantic.dataclasses import dataclass
+from dataclasses import dataclass
 from pydantic.json import pydantic_encoder
 
 from haystack.mmh3 import hash128
 
 logger = logging.getLogger(__name__)
-
 
 BaseConfig.arbitrary_types_allowed = True
 
@@ -40,6 +39,8 @@ LABEL_DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
 
 @dataclass
 class Document:
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
     id: str
     content: Union[str, DataFrame]
     content_type: ContentTypes = Field(default="text")
